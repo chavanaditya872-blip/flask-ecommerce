@@ -1,0 +1,28 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<h1 style="margin-bottom: 1.5rem;">Order History</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Date & Time</th>
+            <th>Total Amount</th>
+            <th>Tracking Status</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in orders %}
+        <tr>
+            <td><strong>#{{ o.id }}</strong></td>
+            <td>{{ o.created_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+            <td><strong style="color: var(--primary);">₹{{ "%.2f"|format(o.total_amount) }}</strong></td>
+            <td><span class="badge">{{ o.status }}</span></td>
+            <td><a href="{{ url_for('order_tracking', id=o.id) }}" class="btn btn-sm btn-primary">Track Order</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align: center; color: #6b7280; padding: 2rem;">No orders placed yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,29 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div style="background: white; border: 1px solid var(--border); border-radius: 8px; padding: 2rem; max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+        <div>
+            <h2>Order #{{ order.id }}</h2>
+            <p style="font-size: 0.85rem; color: #6b7280;">Order Date: {{ order.created_at.strftime('%d %B %Y, %I:%M %p') }}</p>
+        </div>
+        <span class="badge" style="font-size: 1rem; padding: 0.4rem 0.8rem;">Status: {{ order.status }}</span>
+    </div>
+
+    <h3 style="margin-bottom: 1rem;">Items In This Order</h3>
+    {% for item in items %}
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; border-bottom: 1px solid #f3f4f6; padding-bottom: 0.75rem;">
+        <img src="{{ item.image }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+        <div style="flex: 1;">
+            <p><strong>{{ item.name }}</strong></p>
+            <p style="font-size: 0.85rem; color: #6b7280;">{{ item.quantity }} units @ ₹{{ "%.2f"|format(item.price) }}</p>
+        </div>
+        <strong style="color: #111827;">₹{{ "%.2f"|format(item.price * item.quantity) }}</strong>
+    </div>
+    {% endfor %}
+
+    <div style="margin-top: 1.5rem; background: #f9fafb; padding: 1.25rem; border-radius: 6px; border: 1px solid var(--border);">
+        <p><strong>Shipping Destination:</strong> {{ order.shipping_address }}</p>
+        <p style="margin-top: 0.5rem; font-size: 1.25rem; font-weight: 800; color: var(--primary);">Total Paid: ₹{{ "%.2f"|format(order.total_amount) }}</p>
+    </div>
+</div>
+{% endblock %}

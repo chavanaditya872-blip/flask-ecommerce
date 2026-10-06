@@ -1,0 +1,55 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<h1 style="margin-bottom: 1.5rem;">Shopping Cart</h1>
+{% if items %}
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th>Remove</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td style="display: flex; align-items: center; gap: 1rem;">
+                <img src="{{ item.image }}" style="width: 55px; height: 55px; object-fit: cover; border-radius: 4px;">
+                <div>
+                    <strong>{{ item.name }}</strong>
+                    <div style="font-size: 0.75rem; color: #6b7280;">Stock: {{ item.stock }}</div>
+                </div>
+            </td>
+            <td>₹{{ "%.2f"|format(item.price) }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('update_cart', cart_id=item.cart_id) }}" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                    <button name="action" value="decrease" class="btn btn-sm" style="background: #e5e7eb;">-</button>
+                    <span style="font-weight: bold; padding: 0 0.25rem;">{{ item.quantity }}</span>
+                    <button name="action" value="increase" class="btn btn-sm" style="background: #e5e7eb;">+</button>
+                </form>
+            </td>
+            <td><strong style="color: #111827;">₹{{ "%.2f"|format(item.price * item.quantity) }}</strong></td>
+            <td>
+                <form method="POST" action="{{ url_for('update_cart', cart_id=item.cart_id) }}">
+                    <button name="action" value="delete" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div style="margin-top: 1.5rem; text-align: right; background: white; padding: 1.75rem; border: 1px solid var(--border); border-radius: 8px;">
+    <h3 style="font-size: 1.4rem;">Total Payable: <span style="color: var(--primary);">₹{{ "%.2f"|format(total) }}</span></h3>
+    <a href="{{ url_for('checkout') }}" class="btn btn-primary" style="margin-top: 1rem; padding: 0.75rem 2.5rem; font-size: 1rem;">Proceed to Checkout &rarr;</a>
+</div>
+{% else %}
+<div style="text-align: center; padding: 4rem; background: white; border: 1px solid var(--border); border-radius: 8px;">
+    <h2>Your cart is currently empty!</h2>
+    <p style="color: #6b7280; margin: 1rem 0 1.5rem;">Explore our catalog of 20 products to add items.</p>
+    <a href="{{ url_for('products') }}" class="btn btn-primary">Browse Catalog</a>
+</div>
+{% endif %}
+{% endblock %}

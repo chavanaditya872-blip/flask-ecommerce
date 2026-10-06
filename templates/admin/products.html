@@ -1,0 +1,47 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<h1 style="margin-bottom: 1.5rem;">Inventory Control</h1>
+
+<div style="background: white; padding: 1.5rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 2rem;">
+    <h3>Add a New Product</h3>
+    <form method="POST" action="{{ url_for('admin_products') }}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+        <input type="text" name="name" placeholder="Product Name" required class="form-control">
+        <input type="text" name="category" placeholder="Category (e.g. Electronics, Footwear)" required class="form-control">
+        <input type="number" step="0.01" name="price" placeholder="Price in ₹" required class="form-control">
+        <input type="number" name="stock" placeholder="Stock Units" required class="form-control">
+        <input type="url" name="image" placeholder="Image URL (Unsplash or direct image link)" required class="form-control" style="grid-column: 1/-1;">
+        <textarea name="description" placeholder="Short description" class="form-control" style="grid-column: 1/-1;" rows="2"></textarea>
+        <button type="submit" class="btn btn-primary" style="grid-column: 1/-1;">Save to Catalog</button>
+    </form>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Price (INR)</th>
+            <th>Stock</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in products %}
+        <tr>
+            <td style="display: flex; align-items: center; gap: 0.75rem;">
+                <img src="{{ p.image }}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                <strong>{{ p.name }}</strong>
+            </td>
+            <td><span class="badge">{{ p.category }}</span></td>
+            <td><strong>₹{{ "%.2f"|format(p.price) }}</strong></td>
+            <td>{{ p.stock }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('delete_product', id=p.id) }}" onsubmit="return confirm('Permanently delete this product?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

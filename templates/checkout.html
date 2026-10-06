@@ -1,0 +1,32 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<h1 style="margin-bottom: 1.5rem;">Review & Checkout</h1>
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border);">
+        <h3 style="margin-bottom: 1.25rem;">Delivery & Shipping Address</h3>
+        <form method="POST" action="{{ url_for('checkout') }}">
+            <div class="form-group">
+                <label>Address Details (House / Flat No., Street, City, State, PIN)</label>
+                <textarea name="address" required class="form-control" rows="5" placeholder="e.g. Flat 402, Shivajinagar, Pune, Maharashtra - 411005"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1.05rem;">
+                Confirm Order & Pay ₹{{ "%.2f"|format(total) }}
+            </button>
+        </form>
+    </div>
+    <div style="background: white; padding: 1.75rem; border-radius: 8px; border: 1px solid var(--border); height: fit-content;">
+        <h3 style="margin-bottom: 1rem;">Order Items</h3>
+        {% for item in items %}
+        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.6rem;">
+            <span>{{ item.name }} (x{{ item.quantity }})</span>
+            <strong>₹{{ "%.2f"|format(item.price * item.quantity) }}</strong>
+        </div>
+        {% endfor %}
+        <hr style="margin: 1.25rem 0; border: none; border-top: 1px solid var(--border);">
+        <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 800;">
+            <span>Grand Total</span>
+            <span style="color: var(--primary);">₹{{ "%.2f"|format(total) }}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

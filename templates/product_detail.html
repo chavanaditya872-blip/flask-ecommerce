@@ -1,0 +1,29 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div style="background: white; border-radius: 8px; border: 1px solid var(--border); padding: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <img src="{{ product.image }}" alt="{{ product.name }}" style="width: 100%; border-radius: 8px; max-height: 420px; object-fit: cover;">
+    <div style="display: flex; flex-direction: column; justify-content: center;">
+        <span class="badge" style="width: fit-content;">{{ product.category }}</span>
+        <h1 style="margin: 0.5rem 0 1rem; font-size: 2rem;">{{ product.name }}</h1>
+        <p style="font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem;">₹{{ "%.2f"|format(product.price) }}</p>
+        <p style="color: #4b5563; line-height: 1.6; margin-bottom: 1.5rem; font-size: 1rem;">{{ product.description }}</p>
+        
+        <p style="font-size: 0.95rem; margin-bottom: 1.5rem;">
+            Stock Status: 
+            <strong style="color: {% if product.stock > 0 %}#059669{% else %}#dc2626{% endif %};">
+                {% if product.stock > 0 %}{{ product.stock }} units available{% else %}Sold Out{% endif %}
+            </strong>
+        </p>
+
+        {% if product.stock > 0 %}
+        <form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}" style="display: flex; gap: 1rem; align-items: center;">
+            <label style="font-size: 0.9rem; font-weight: 600;">Qty:</label>
+            <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control" style="width: 80px;">
+            <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem; font-size: 1rem;">Add to Cart</button>
+        </form>
+        {% else %}
+        <div class="alert alert-danger" style="display: inline-block;">This item is currently out of stock.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
